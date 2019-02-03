@@ -33,7 +33,7 @@ All knitout opcodes are supported as a front-end function. Currently, the fronte
 
 Function | Arguments | Example | Description
 --- | --- | --- | ---
-init | `carriers list`(String) |  init('1 2 3 4 5 6')| Initialize available carriers.
+init | `carriers`(String) |  init('1 2 3 4 5 6')| Initialize available carriers.
 addHeader | `name`(String),`value`(String) |  addHeader('Machine', 'SWGXYZ')| Add header information as name,value pairs. This is also used for including [extensions](https://textiles-lab.github.io/knitout/extensions.html).
 ingripper  | `carriers` | ingripper("5") | Bring in yarn carriers
 inhook | `carriers` | inhook("B") | Bring in yarn carriers using the yarn inserting hook
