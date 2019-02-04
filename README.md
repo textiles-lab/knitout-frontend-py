@@ -7,12 +7,12 @@ To use import the `knitout`	module.
 TODO better example
 
 ```python example
-import knitout as k
-k.init('1 2 3')
-k.ingripper('1')
-k.knit('+',('f',0),1)
+import knitout 
+w = knitout.Writer('1 2 3')
+w.ingripper('1')
+w.knit('+',('f',0),1)
 ...
-k.write('out.k')
+w.write('out.k')
 ```
 
 
@@ -27,13 +27,12 @@ Legal values for `bed` are (**f**)ront, (**b**)ack,  (**f**)ront(**s**)lider, (*
 Needle is a Number value within the range supported by the machine.
 "fs10", for example, specifies front-bed slider location 10, "b20" specifies back-bed needle 20.
 The front-end also allows specifying bed needles as tuples or lists ("f",5) `["f",5]`.
-Before using a carrier in any function, the valid set of carriers need to be initialized using `init`.
+A valid set of carriers need to be initialized when creating a Writer object.
 
 All knitout opcodes are supported as a front-end function. Currently, the frontend supports:
 
 Function | Arguments | Example | Description
 --- | --- | --- | ---
-init | `carriers list`(String) |  init('1 2 3 4 5 6')| Initialize available carriers.
 addHeader | `name`(String),`value`(String) |  addHeader('Machine', 'SWGXYZ')| Add header information as name,value pairs. This is also used for including [extensions](https://textiles-lab.github.io/knitout/extensions.html).
 ingripper  | `carriers` | ingripper("5") | Bring in yarn carriers
 inhook | `carriers` | inhook("B") | Bring in yarn carriers using the yarn inserting hook
@@ -57,4 +56,4 @@ addRawOperation| String | addRawOperation("your knitout inst string") | Escape h
 
 See [knitiout extensions](https://textiles-lab.github.io/knitout/extensions.html) for extensions that can be added as 'headers'. See [knitout specification](https://textiles-lab.github.io/knitout/knitout.html) for further details.
 
-See knitout.example() for example usage.
+See knitout.example() that creates a rectangular stockinette sheet for example usage.

@@ -1,29 +1,13 @@
 # python3
-
-# usage:
-
-# import knitout
-# knitout.init(carrier set)
-# knitout.tuck('+','f0','1')
-# knitout.rack(1)
-# ...
-# knitout.write(filename)
-# mostly similar to js except 'in' is a python keyword
+# see example() for usage
 
 import re
-# array of carrier names, front-to-back
-carriers = list()
-# array of operations, strings
-operations = list()
-# array of headers, strings
-headers = list()
-validHeaders = ['Machine', 'Position', 'Yarn', 'Gauge']
+validHeaders = ['Carriers', 'Machine', 'Position', 'Yarn', 'Gauge']
 ############### helpers ######################################################
 
 
 reg = re.compile("([a-zA-Z]+)([0-9]+)")
-def shiftCarrierSet(args):
-    global carriers
+def shiftCarrierSet(args, carriers):
     if len(args) == 0:
         raise AssertionError("No carriers specified")
 
@@ -69,175 +53,174 @@ def shiftDirection(args):
     if len(args) == 0:
         raise AssertionError("No direction specified")
     direction = args.pop(0)
-    if direction != '+' and dir != '-':
-        raise ValueError("Invalid direction")
+    if direction != '+' and direction != '-':
+        raise ValueError("Invalid direction: " + direction)
     return direction
 
 ##############################################################################
 
-def init(cs):
-    global carriers
-    carriers = cs.split()
 
-def addHeader(name, value):
-    global headers
-    if not name in validHeaders:
-        raise ValueError("Unknown header, must be " + ' '.join(validHeaders) + "; " + name)
-    headers.append(';;' + name + ': ' + value)
+class Writer:
 
-def addRawOperation(op):
-    global operations
-    operations.append(op)
+    def __init__(self, cs):
+        # array of carrier names, front-to-back
+        self.carriers = list()
+        # array of operations, strings
+        self.operations = list()
+        # array of headers, strings
+        self.headers = list()
 
-def ingripper(*args):
-    global operations
-    global carriers
-    argl = list(args)
-    operations.append('in ' +  shiftCarrierSet(argl))
+        self.carriers = cs.split()
+        self.addHeader('Carriers', cs);
+    def addHeader(self, name, value):
+        if not name in validHeaders:
+            raise ValueError("Unknown header, must be " + ' '.join(validHeaders) + "; " + name)
+        self.headers.append(';;' + name + ': ' + value)
 
+    def addRawOperation(self, op):
+        self.operations.append(op)
 
-def inhook(*args):
-    global operations
-    global carriers
-    argl = list(args)
-    operations.append('inhook ' + shiftCarrierSet(argl))
+    def ingripper(self, *args):
+        argl = list(args)
+        self.perations.append('in ' +  shiftCarrierSet(argl, self.carriers))
 
 
-
-def outgripper(*args):
-    global operations
-    global carriers
-    argl = list(args)
-    operations.append('out ' + shiftCarrierSet(argl))
-
-
-def outhook(*args):
-    global operations
-    global carriers
-    argl = list(args)
-    operations.append('outhook ' + shiftCarrierSet(argl))
+    def inhook(self, *args):
+        argl = list(args)
+        self.operations.append('inhook ' + shiftCarrierSet(argl, self.carriers))
 
 
 
-def releasehook(*args):
-    global operations
-    global carriers
-    argl = list(args)
-    operations.append('releasehook ' + shiftCarrierSet(argl))
+    def outgripper(self, *args):
+        argl = list(args)
+        self.operations.append('out ' + shiftCarrierSet(argl, self.carriers))
 
 
-def rack(r):
-    global operations
-    if not (type(r) == int or type(r) == float or (type(r) == str and r.isdigit())):
-        raise ValueError("Rack is not an integer or fraction")
-    #TODO only certain values make sense
-    operations.append('rack ' + str(r))
+    def outhook(self, *args):
+        argl = list(args)
+        self.operations.append('outhook ' + shiftCarrierSet(argl, self.carriers))
 
 
-def knit(*args):
-    global operations
-    argl = list(args)
-    direction = shiftDirection(argl)
-    bn = shiftBedNeedle(argl)
-    cs = shiftCarrierSet(argl)
-    operations.append('knit ' + direction + ' ' + bn + ' ' + cs)
 
-def tuck(*args):
-    global operations
-    argl = list(args)
-    direction = shiftDirection(argl)
-    bn = shiftBedNeedle(argl)
-    cs = shiftCarrierSet(argl)
-    operations.append('tuck ' + direction + ' ' + bn + ' ' + cs)
+    def releasehook(self, *args):
+        argl = list(args)
+        self.operations.append('releasehook ' + shiftCarrierSet(argl, self.carriers))
 
 
-def xfer(*args):
-    global operations
-    argl = list(args)
-    bn_from = shiftBedNeedle(argl)
-    bn_to = shiftBedNeedle(argl)
-    operations.append('xfer ' + bn_from + ' ' + bn_to)
+    def rack(self, r):
+        if not (type(r) == int or type(r) == float or (type(r) == str and r.isdigit())):
+            raise ValueError("Rack is not an integer or fraction")
+        #TODO only certain values make sense
+        self.operations.append('rack ' + str(r))
 
 
-def split(*args):
-    global operations
-    argl = list(args)
-    direction  = shiftDirection(argl)
-    bn_from = shiftBedNeedle(argl)
-    bn_to = shiftBedNeedle(argl)
-    cs = shiftCarrierSet(argl)
-    operations.append('shift '+ direction + ' '  + bn_from + ' ' + bn_to + ' ' + cs)
+    def knit(self, *args):
+        argl = list(args)
+        direction = shiftDirection(argl)
+        bn = shiftBedNeedle(argl)
+        cs = shiftCarrierSet(argl, self.carriers)
+        self.operations.append('knit ' + direction + ' ' + bn + ' ' + cs)
+
+    def tuck(self, *args):
+        argl = list(args)
+        direction = shiftDirection(argl)
+        bn = shiftBedNeedle(argl)
+        cs = shiftCarrierSet(argl, self.carriers)
+        self.operations.append('tuck ' + direction + ' ' + bn + ' ' + cs)
 
 
-def miss(*args):
-    global operations
-    argl = list(args)
-    direction = shiftDirection(argl)
-    bn = shiftBedNeedle(argl)
-    cs = shiftCarrierSet(argl)
-    operations.append('miss ' + direction + ' ' + bn + ' ' + cs)
-
-def drop(*args):
-    global operations
-    argl = list(args)
-    bn = shiftBedNeedle(argl)
-    operations.append('drop ' + bn)
-
-def amiss(*args):
-    global operations
-    argl = list(args)
-    bn = shiftBedNeedle(argl)
-    operations.append('amiss ' + bn)
-
-def pause():
-    global operations
-    operations.append('pause')
-
-def comment(commentString):
-    global operations
-    if type(commentString) != str:
-        raise ValueError('comment has to be string')
-    operations.append(';' + commentString)
+    def xfer(self, *args):
+        argl = list(args)
+        bn_from = shiftBedNeedle(argl)
+        bn_to = shiftBedNeedle(argl)
+        self.operations.append('xfer ' + bn_from + ' ' + bn_to)
 
 
-#Extensions
+    def split(self, *args):
+        argl = list(args)
+        direction  = shiftDirection(argl)
+        bn_from = shiftBedNeedle(argl)
+        bn_to = shiftBedNeedle(argl)
+        cs = shiftCarrierSet(argl, self.carriers)
+        self.operations.append('shift '+ direction + ' '  + bn_from + ' ' + bn_to + ' ' + cs)
 
-def stitchNumber(val):
-    global operations
-    operations.append('x-stitch-number ' + str(val))
 
-def fabricPresser(mode):
-    global operations
-    if not (mode == 'auto' or mode == 'on' or mode == 'off'):
-        raise ValueError("Mode must be one of 'auto','on','off' : "+ str(mode))
-    operations.append('x-fabric-presser ' + mode)
+    def miss(self, *args):
+        argl = list(args)
+        direction = shiftDirection(argl)
+        bn = shiftBedNeedle(argl)
+        cs = shiftCarrierSet(argl, self.carriers)
+        self.operations.append('miss ' + direction + ' ' + bn + ' ' + cs)
 
-def write(filename):
-    global headers
-    global operations
-    version = ';!knitout-2\n'
-    content = version + '\n'.join(headers) + '\n' +  '\n'.join(operations)
-    try:
-        with open(filename, "w") as out:
-            print(content, file=out)
-    except IOError as error:
-        print('Could not write to file ' + filename)
+    def drop(self, *args):
+        argl = list(args)
+        bn = shiftBedNeedle(argl)
+        self.operations.append('drop ' + bn)
+
+    def amiss(self, *args):
+        argl = list(args)
+        bn = shiftBedNeedle(argl)
+        self.operations.append('amiss ' + bn)
+
+    def pause(self):
+        self.operations.append('pause')
+
+    def comment(self, commentString):
+        if type(commentString) != str:
+            raise ValueError('comment has to be string')
+        self.operations.append(';' + commentString)
+
+
+    #Extensions
+
+    def stitchNumber(self, val):
+        self.operations.append('x-stitch-number ' + str(val))
+
+    def fabricPresser(self, mode):
+        if not (mode == 'auto' or mode == 'on' or mode == 'off'):
+            raise ValueError("Mode must be one of 'auto','on','off' : "+ str(mode))
+        self.operations.append('x-fabric-presser ' + mode)
+
+    def clear(self):
+        #clear buffers
+        self.headers = list()
+        self.operations = list()
+
+    def write(self, filename):
+        version = ';!knitout-2\n'
+        content = version + '\n'.join(self.headers) + '\n' +  '\n'.join(self.operations)
+        try:
+            with open(filename, "w") as out:
+                print(content, file=out)
+            print('wrote file ' + filename)
+        except IOError as error:
+            print('Could not write to file ' + filename)
 
 def example():
-    #TODO simple stockinette hello world example
-    global operations
-    #init carrier set
-    init('1 2 3 4 5')
-    addHeader('Position', 'Right')
-    ingripper(1,2)
-    knit('+','f0','1','2')
-    rack(-1)
-    xfer('f0', ('b',1))
-    rack(0)
-    knit('+',['b',0],'1',2)
-    knit('+',('f',0),'1','2')
-    outgripper(1,2)
-    print(operations)
-    write('example.k')
+    stockinette_rectangle()
 
+def stockinette_rectangle(width=10, height=20):
+    writer = Writer('1 2 3 4')
+    writer.addHeader('Machine', 'swg')
+    carrier = '1'
+    writer.inhook(carrier)
+    for i in range(width-1, 0, -2):
+        writer.tuck('-', ('f',i), carrier)
+    writer.releasehook(carrier)
+    for i in range(0, width, 2):
+        writer.tuck('+', ('f', i), carrier)
+    for j in range(0, height):
+        if j%2 == 0:
+            for i in range(width, 0,-1):
+                writer.knit('-', ('f', i-1), carrier)
+        else:
+            for i in range(0, width):
+                writer.knit('+', ('f', i), carrier)
 
+    writer.outhook(carrier)
+    for i in range(0, width):
+        writer.drop(('f', i))
+
+    writer.write('stockinette-'+str(width)+'x'+str(height)+'.k')
+
+#TODO more examples: garter_rectangle(), rib_rectangle(), seed_rectangle()
