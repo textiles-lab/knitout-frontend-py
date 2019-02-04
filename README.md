@@ -25,7 +25,7 @@ In the table below:
 Legal values for `bed` are (**f**)ront, (**b**)ack,  (**f**)ront(**s**)lider, (**b**)ack(**s**)lider.
 Needle is a Number value within the range supported by the machine.
 "fs10", for example, specifies front-bed slider location 10, "b20" specifies back-bed needle 20.
-The front-end also allows specifying bed needles as tuples or lists ("f",5) `["f",5]`.
+The front-end also allows specifying bed needles as tuples  `("f",5)` or lists `["f",5]`.
 A valid set of carriers need to be initialized when creating a Writer object.
 
 All knitout opcodes are supported as a front-end function. Currently, the frontend supports:
