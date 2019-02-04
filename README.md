@@ -2,9 +2,8 @@
  
 
 A python wrapper for all operations supported by knitout with basic error and type checking.
-To use import the `knitout`	module. 
+To use import the `knitout`	module. See  `knitout.example()` for example usage.
 
-TODO better example
 
 ```python example
 import knitout 
