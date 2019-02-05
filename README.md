@@ -25,19 +25,19 @@ In the table below:
 Legal values for `bed` are (**f**)ront, (**b**)ack,  (**f**)ront(**s**)lider, (**b**)ack(**s**)lider.
 Needle is a Number value within the range supported by the machine.
 "fs10", for example, specifies front-bed slider location 10, "b20" specifies back-bed needle 20.
-The front-end also allows specifying bed needles as tuples  `("f",5)` or lists `["f",5]`.
+The front-end also allows specifying bed needles as tuples  `("f",5)` or lists `["f",5]` or separate arguments`'f'`,`5`.
 A valid set of carriers need to be initialized when creating a Writer object.
 
 All knitout opcodes are supported as a front-end function. Currently, the frontend supports:
 
 Function | Arguments | Example | Description
 --- | --- | --- | ---
-addHeader | `name`(String),`value`(String) |  addHeader('Machine', 'SWGXYZ')| Add header information as name,value pairs. This is also used for including [extensions](https://textiles-lab.github.io/knitout/extensions.html).
-ingripper  | `carriers` | ingripper("5") | Bring in yarn carriers
-inhook | `carriers` | inhook("B") | Bring in yarn carriers using the yarn inserting hook
-releasehook    | `carriers` | releasehook("5") | Release the yarn inserting hook used to bring in the given yarn carriers
-outgripper | `carriers` | outgripper("6") | Take out yarn carrier
-outhook | `carriers` | outhook("5") | Take out yarn carrier with yarn inserting hook
+addHeader | `name`(String),`value`(String) |  addHeader('Machine', 'SWGXYZ')| Add header information as name,value pairs. 
+ingripper  | `carriers` | ingripper("5") | Bring in yarn carriers.
+inhook | `carriers` | inhook("B") | Bring in yarn carriers using the yarn inserting hook.
+releasehook    | `carriers` | releasehook("5") | Release the yarn inserting hook used to bring in the given yarn carriers.
+outgripper | `carriers` | outgripper("6") | Take out yarn carrier.
+outhook | `carriers` | outhook("5") | Take out yarn carrier with yarn inserting hook.
 stitchNumber|`index`(Number)  | stitchNumber(5) | Explicit function for using stitch number extension that reads stitch values at `index` from a table. See [extensions](https://textiles-lab.github.io/knitout/extensions.html) for details.
 fabricPresser|`mode`(String)  | fabricPresser('auto') | Explicit function for using fabric presser extension. Valid modes include 'auto', 'on', 'off'. See [extensions](https://textiles-lab.github.io/knitout/extensions.html) for details.
 rack | `rack value`(Number) | rack(1) | Translate the back bed relative to the front bed by `rack value` needle units. Fractional values are legal and may be supported by the machine.
@@ -48,9 +48,9 @@ miss | `direction`,`bed+needle`,`carriers` | miss("+","f10","B") | Miss on `bed`
 split| `direction`,`from bed+needle`,`to bed+needle`, `carriers` | split("+","f10", "b10", "B") | Pull a loop from `from bed+needle` and transfer old loops to `to bed+needle` in   `direction` using `carriers`. 
 drop| `bed+needle`| drop("f10") | Drop loops from `bed+needle`.
 amiss| `bed+needle`| amiss("f10") | Tuck operation at `bed+needle` without using yarn. 
-pause| None | pause() | Pause machine when instruction is encountered
-comment| String | comment("This is a comment") | Insert comments into knitout file
-addRawOperation| String | addRawOperation("your knitout inst string") | Escape hatch to directly inject knitout code  
+pause| None | pause() | Pause machine when instruction is encountered.
+comment| String | comment("This is a comment") | Insert comments into knitout file.
+addRawOperation| String | addRawOperation("your knitout inst string") | Escape hatch to directly inject knitout code.
 
 
 See [knitout specification](https://textiles-lab.github.io/knitout/knitout.html) for further details.
