@@ -53,6 +53,6 @@ comment| String | comment("This is a comment") | Insert comments into knitout fi
 addRawOperation| String | addRawOperation("your knitout inst string") | Escape hatch to directly inject knitout code  
 
 
-See [knitiout extensions](https://textiles-lab.github.io/knitout/extensions.html) for extensions that can be added as 'headers'. See [knitout specification](https://textiles-lab.github.io/knitout/knitout.html) for further details.
+See [knitout specification](https://textiles-lab.github.io/knitout/knitout.html) for further details.
 
-See knitout.example() that creates a rectangular stockinette sheet for example usage.
+See knitout.example() for example usage of this frontend to create stockinette, garter and rib rectangles.
