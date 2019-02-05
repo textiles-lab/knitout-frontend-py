@@ -6,11 +6,10 @@ validHeaders = ['Carriers', 'Machine', 'Position', 'Yarn', 'Gauge']
 ############### helpers ######################################################
 
 
-reg = re.compile("([a-zA-Z]+)([0-9]+)")
+reg = re.compile("([a-zA-Z]+)([\+\-]?[0-9]+)")
 def shiftCarrierSet(args, carriers):
     if len(args) == 0:
         raise AssertionError("No carriers specified")
-
     for c in args:
         if not str(c) in carriers:
             raise ValueError("Carrier not specified in initial set", c)
@@ -27,14 +26,22 @@ def shiftBedNeedle(args):
     needle = None
     if type(bn) == str:
         m = reg.match(bn)
-        if (m.group(1) == 'f' or m.group(1) == 'b' or m.group(1) == 'fs' or m.group(1) == 'bs'):
-            bed = m.group(1)
+        if not m and (bn == 'f' or bn == 'b' or bn == 'fs' or bn == 'bs'):
+            bed = bn
+            if not len(args):
+                raise ValueError("Needle not specified")
+            if  isinstance(args[0],int) or args[0].isdgit():
+                needle = int(args.pop(0))
+
         else:
-            raise ValueError("Invalid bed type. Must be 'f' 'b' 'fs' 'bs'.")
-        if m.group(2).isdigit() :
-            needle = m.group(2)
-        else:
-            raise ValueError("Invalid needle. Must be numeric.", m.group(2))
+            if (m.group(1) == 'f' or m.group(1) == 'b' or m.group(1) == 'fs' or m.group(1) == 'bs'):
+                bed = m.group(1)
+            else:
+                raise ValueError("Invalid bed type. Must be 'f' 'b' 'fs' 'bs'.")
+            if m.group(2):
+                needle = m.group(2)
+            else:
+                raise ValueError("Invalid needle. Must be numeric.", m.group(2))
     else:
         if len(bn) != 2:
             raise ValueError("Bed and Needle need to be supplied.")
