@@ -149,7 +149,7 @@ class Writer:
         bn_from = shiftBedNeedle(argl)
         bn_to = shiftBedNeedle(argl)
         cs = shiftCarrierSet(argl, self.carriers)
-        self.operations.append('shift '+ direction + ' '  + bn_from + ' ' + bn_to + ' ' + cs)
+        self.operations.append('split '+ direction + ' '  + bn_from + ' ' + bn_to + ' ' + cs)
 
 
     def miss(self, *args):
@@ -207,6 +207,8 @@ def example():
     stockinette_rectangle()
     garter_rectangle()
     rib_rectangle()
+    cable_rectangle()
+    stockinette_band()
 
 def stockinette_rectangle(width=10, height=20):
     writer = Writer('1 2 3 4')
@@ -215,6 +217,9 @@ def stockinette_rectangle(width=10, height=20):
     writer.inhook(carrier)
     for i in range(width-1, 0, -2):
         writer.tuck('-', ('f',i), carrier)
+    #workaround:
+    writer.amiss(('f',0))
+    writer.amiss(('f',0))
     writer.releasehook(carrier)
     for i in range(0, width, 2):
         writer.tuck('+', ('f', i), carrier)
@@ -239,6 +244,9 @@ def garter_rectangle(width=10, height=20):
     writer.inhook(carrier)
     for i in range(width-1, 0, -2):
         writer.tuck('-', ('f',i), carrier)
+    #workaround:
+    writer.amiss(('f',0))
+    writer.amiss(('f',0))
     writer.releasehook(carrier)
     for i in range(0, width, 2):
         writer.tuck('+', ('f', i), carrier)
@@ -270,7 +278,12 @@ def rib_rectangle(width=10, height=20):
         if i%2:
             bed = 'b'
         writer.tuck('-', (bed,i), carrier)
+
     writer.releasehook(carrier)
+    #workaround:
+    writer.amiss(('f',0))
+    writer.amiss(('f',0))
+
     for i in range(0, width, 2):
         bed = 'f'
         if i%2:
@@ -298,4 +311,98 @@ def rib_rectangle(width=10, height=20):
 
     writer.write('rib-'+str(width)+'x'+str(height)+'.k')
 
+#to test xfers, rack:
+def cable_rectangle(width=30, height=40):
+    writer = Writer('1 2 3 4')
+    writer.addHeader('Machine', 'swg')
+    carrier = '1'
+    mid = int(width/2)
+    writer.inhook(carrier)
+    for i in range(width-1, 0, -2):
+        writer.tuck('-', ('f',i), carrier)
+    #workaround:
+    writer.amiss(('f',0))
+    writer.amiss(('f',0))
 
+    writer.releasehook(carrier)
+    for i in range(0, width, 2):
+        writer.tuck('+', ('f', i), carrier)
+    for j in range(0, height):
+        if j%2 == 0:
+            for i in range(width, 0,-1):
+                writer.knit('-', ('f', i-1), carrier)
+        else:
+            for i in range(0, width):
+                writer.knit('+', ('f', i), carrier)
+        if j > 2 and j < height-2 and j%4==0: #every 4th row
+            writer.comment("cable op at row " + str(j))
+            writer.xfer('f', mid-2, 'b', mid-2)
+            writer.xfer('f', mid-1, 'b', mid-1)
+            writer.xfer('f', mid, 'b', mid)
+            writer.xfer('f', mid+1, 'b', mid+1)
+            writer.rack(2)
+            writer.xfer('b',mid-2, 'f', mid)
+            writer.xfer('b',mid-1, 'f', mid+1)
+            writer.rack(-2)
+            writer.xfer('b',mid, 'f', mid-2)
+            writer.xfer('b',mid+1, 'f', mid-1)
+            writer.rack(0)
+    writer.outhook(carrier)
+    for i in range(0, width):
+        writer.drop(('f', i))
+
+    writer.write('cable-'+str(width)+'x'+str(height)+'.k')
+
+#to test split
+def stockinette_band(width=20, height=40):
+    writer = Writer('1 2 3 4')
+    writer.addHeader('Machine', 'swg')
+    carrier = '1'
+    writer.inhook(carrier)
+    for i in range(width-1, 0, -2):
+        writer.tuck('-', ('f',i), carrier)
+     #workaround:
+    writer.amiss(('f',0))
+    writer.amiss(('f',0))
+
+    writer.releasehook(carrier)
+    for i in range(0, width, 2):
+        writer.tuck('+', ('f', i), carrier)
+
+    for j in range(0, height):
+        if j%2 == 0:
+            for i in range(width, 0,-1):
+                writer.knit('-', ('f', i-1), carrier)
+        else:
+            if j == 1:
+                for i in range(0, width):
+                    writer.split('+','f',i,'b',i, carrier)
+            else:
+                for i in range(0, width):
+                    writer.knit('+', ('f', i), carrier)
+
+
+    for i in range(0, width):
+        writer.xfer('b',i,'f',i)
+
+    if height%2 == 0:
+        for i in range(width, 0,-1):
+            writer.knit('-', ('f', i-1), carrier)
+        for i in range(0, width):
+            writer.knit('+', ('f', i), carrier)
+
+
+    else:
+        for i in range(0, width):
+            writer.knit('+', ('f', i), carrier)
+        for i in range(width, 0,-1):
+            writer.knit('-', ('f', i-1), carrier)
+
+    #todo bindoff
+    writer.outhook(carrier)
+    for i in range(0, width):
+        writer.drop(('f', i))
+
+    writer.write('band-'+str(width)+'x'+str(height)+'.k')
+
+#todo tubes, castons, bindoffs
