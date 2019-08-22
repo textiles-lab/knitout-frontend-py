@@ -217,9 +217,6 @@ def stockinette_rectangle(width=10, height=20):
     writer.inhook(carrier)
     for i in range(width-1, 0, -2):
         writer.tuck('-', ('f',i), carrier)
-    #workaround:
-    writer.amiss(('f',0))
-    writer.amiss(('f',0))
     writer.releasehook(carrier)
     for i in range(0, width, 2):
         writer.tuck('+', ('f', i), carrier)
@@ -244,9 +241,6 @@ def garter_rectangle(width=10, height=20):
     writer.inhook(carrier)
     for i in range(width-1, 0, -2):
         writer.tuck('-', ('f',i), carrier)
-    #workaround:
-    writer.amiss(('f',0))
-    writer.amiss(('f',0))
     writer.releasehook(carrier)
     for i in range(0, width, 2):
         writer.tuck('+', ('f', i), carrier)
@@ -280,9 +274,6 @@ def rib_rectangle(width=10, height=20):
         writer.tuck('-', (bed,i), carrier)
 
     writer.releasehook(carrier)
-    #workaround:
-    writer.amiss(('f',0))
-    writer.amiss(('f',0))
 
     for i in range(0, width, 2):
         bed = 'f'
@@ -320,9 +311,6 @@ def cable_rectangle(width=30, height=40):
     writer.inhook(carrier)
     for i in range(width-1, 0, -2):
         writer.tuck('-', ('f',i), carrier)
-    #workaround:
-    writer.amiss(('f',0))
-    writer.amiss(('f',0))
 
     writer.releasehook(carrier)
     for i in range(0, width, 2):
@@ -361,9 +349,6 @@ def stockinette_band(width=20, height=40):
     writer.inhook(carrier)
     for i in range(width-1, 0, -2):
         writer.tuck('-', ('f',i), carrier)
-     #workaround:
-    writer.amiss(('f',0))
-    writer.amiss(('f',0))
 
     writer.releasehook(carrier)
     for i in range(0, width, 2):
