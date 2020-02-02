@@ -186,7 +186,7 @@ class Writer:
     def fabricPresser(self, mode):
         if not (mode == 'auto' or mode == 'on' or mode == 'off'):
             raise ValueError("Mode must be one of 'auto','on','off' : "+ str(mode))
-        self.operations.append('x-fabric-presser ' + mode)
+        self.operations.append('x-presser-mode ' + mode)
 
     def clear(self):
         #clear buffers
