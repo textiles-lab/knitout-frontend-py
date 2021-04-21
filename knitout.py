@@ -90,7 +90,7 @@ class Writer:
 
     def ingripper(self, *args):
         argl = list(args)
-        self.perations.append('in ' +  shiftCarrierSet(argl, self.carriers))
+        self.operations.append('in ' +  shiftCarrierSet(argl, self.carriers))
 
 
     def inhook(self, *args):
