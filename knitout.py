@@ -97,6 +97,9 @@ class Writer:
         argl = list(args)
         self.operations.append('inhook ' + shiftCarrierSet(argl, self.carriers))
 
+    def incarrier(self, *args): #NOTE: can't name func `in` since that is a keyword in python
+      argl = list(args)
+      self.operations.append('in ' + shiftCarrierSet(argl, self.carriers))
 
 
     def outgripper(self, *args):
@@ -108,6 +111,9 @@ class Writer:
         argl = list(args)
         self.operations.append('outhook ' + shiftCarrierSet(argl, self.carriers))
 
+    def outcarrier(self, *args):
+        argl = list(args)
+        self.operations.append('out ' + shiftCarrierSet(argl, self.carriers))
 
 
     def releasehook(self, *args):
@@ -170,8 +176,8 @@ class Writer:
         bn = shiftBedNeedle(argl)
         self.operations.append('amiss ' + bn)
 
-    def pause(self):
-        self.operations.append('pause')
+    def pause(self, message=''):
+        self.operations.append(f'pause {message}')
 
     def comment(self, commentString):
         if type(commentString) != str:
@@ -184,10 +190,27 @@ class Writer:
     def stitchNumber(self, val):
         self.operations.append('x-stitch-number ' + str(val))
 
+    def speedNumber(self, val):
+        self.operations.append('x-speed-number ' + str(val))
+    
     def fabricPresser(self, mode):
         if not (mode == 'auto' or mode == 'on' or mode == 'off'):
             raise ValueError("Mode must be one of 'auto','on','off' : "+ str(mode))
         self.operations.append('x-presser-mode ' + mode)
+
+    #for kniterate:
+    def rollerAdvance(self, val):
+        self.operations.append('x-roller-advance ' + str(val))
+
+    def addRollerAdvance(self,val):
+        self.operations.append('x-add-roller-advance ' + str(val))
+
+    def stoppingDistance(self,val):
+        self.operations.append('x-carrier-stopping-distance ' + str(val))
+
+    def xferStitchNumber(self, val):
+        self.operations.append('x-xfer-stitch-number ' + str(val))
+    
 
     def clear(self):
         #clear buffers
