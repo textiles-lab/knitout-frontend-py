@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # python3
 # see example() for usage
-
 import re
 validHeaders = ['Carriers', 'Machine', 'Position', 'Yarn', 'Gauge']
 ############### helpers ######################################################
@@ -92,20 +91,17 @@ class Writer:
         argl = list(args)
         self.operations.append('in ' +  shiftCarrierSet(argl, self.carriers))
 
-
     def inhook(self, *args):
         argl = list(args)
         self.operations.append('inhook ' + shiftCarrierSet(argl, self.carriers))
 
     def incarrier(self, *args): #NOTE: can't name func `in` since that is a keyword in python
-      argl = list(args)
-      self.operations.append('in ' + shiftCarrierSet(argl, self.carriers))
-
+        argl = list(args)
+        self.operations.append('in ' + shiftCarrierSet(argl, self.carriers))
 
     def outgripper(self, *args):
         argl = list(args)
         self.operations.append('out ' + shiftCarrierSet(argl, self.carriers))
-
 
     def outhook(self, *args):
         argl = list(args)
@@ -114,7 +110,6 @@ class Writer:
     def outcarrier(self, *args):
         argl = list(args)
         self.operations.append('out ' + shiftCarrierSet(argl, self.carriers))
-
 
     def releasehook(self, *args):
         argl = list(args)
@@ -184,6 +179,10 @@ class Writer:
             raise ValueError('comment has to be string')
         self.operations.append(';' + commentString)
 
+    def kcodecomment(self, commentString):
+        if type(commentString) != str:
+            raise ValueError('comment has to be string')
+        self.operations.append(';kniterate ' + commentString)
 
     #Extensions
 
@@ -192,7 +191,7 @@ class Writer:
 
     def speedNumber(self, val):
         self.operations.append('x-speed-number ' + str(val))
-    
+
     def fabricPresser(self, mode):
         if not (mode == 'auto' or mode == 'on' or mode == 'off'):
             raise ValueError("Mode must be one of 'auto','on','off' : "+ str(mode))
@@ -210,7 +209,6 @@ class Writer:
 
     def xferStitchNumber(self, val):
         self.operations.append('x-xfer-stitch-number ' + str(val))
-    
 
     def clear(self):
         #clear buffers
