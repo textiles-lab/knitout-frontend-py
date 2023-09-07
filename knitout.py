@@ -184,13 +184,15 @@ class Writer:
             raise ValueError('comment has to be string')
         self.operations.append(';kniterate ' + commentString)
 
-    #Extensions
-
+    #Extensions:
     def stitchNumber(self, val):
         self.operations.append('x-stitch-number ' + str(val))
 
     def speedNumber(self, val):
         self.operations.append('x-speed-number ' + str(val))
+
+    def subRollerNumber(self, val):
+        self.operations.append('x-sub-roller-number ' + str(val))
 
     def fabricPresser(self, mode):
         if not (mode == 'auto' or mode == 'on' or mode == 'off'):
