@@ -39,6 +39,8 @@ releasehook    | `carriers` | releasehook("5") | Release the yarn inserting hook
 outgripper | `carriers` | outgripper("6") | Take out yarn carrier.
 outhook | `carriers` | outhook("5") | Take out yarn carrier with yarn inserting hook.
 stitchNumber|`index`(Number)  | stitchNumber(5) | Explicit function for using stitch number extension that reads stitch values at `index` from a table. See [extensions](https://textiles-lab.github.io/knitout/extensions.html) for details.
+speedNumber|`index`(Number)  | speedNumber(2) | Explicit function for using speed number extension that reads speed values at `index` from a table. Valid speeds are 0-15. See [extensions](https://textiles-lab.github.io/knitout/extensions.html) for details.
+subRollerNumber|`index`(Number)  | subRollerNumber(1) | Explicit function for using sub roller number extension that reads sub roller values at `index` from a table. Valid subRoller values are 0-31. See [extensions](https://textiles-lab.github.io/knitout/extensions.html) for details.
 fabricPresser|`mode`(String)  | fabricPresser('auto') | Explicit function for using fabric presser extension. Valid modes include 'auto', 'on', 'off'. See [extensions](https://textiles-lab.github.io/knitout/extensions.html) for details.
 rack | `rack value`(Number) | rack(1) | Translate the back bed relative to the front bed by `rack value` needle units. Fractional values are legal and may be supported by the machine.
 tuck | `direction`,`bed+needle`,`carriers` | tuck("+","f10","B") | Tuck on `bed` at `needle` using `carriers` in `direction` direction. 
