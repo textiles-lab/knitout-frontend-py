@@ -10,6 +10,7 @@ reg = re.compile("([a-zA-Z]+)([\+\-]?[0-9]+)")
 def shiftCarrierSet(args, carriers):
     if len(args) == 0:
         raise AssertionError("No carriers specified")
+    args = args[0].split()
     for c in args:
         if not str(c) in carriers:
             raise ValueError("Carrier not specified in initial set", c)
