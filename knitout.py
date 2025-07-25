@@ -195,6 +195,12 @@ class Writer:
     def subRollerNumber(self, val):
         self.operations.append('x-sub-roller-number ' + str(val))
 
+    def startLoopNumber(self, val):
+        self.operations.append('x-loop-start ' + str(val))
+
+    def endLoopNumber(self, val):
+        self.operations.append('x-loop-end ' + str(val))
+    
     def fabricPresser(self, mode):
         if not (mode == 'auto' or mode == 'on' or mode == 'off'):
             raise ValueError("Mode must be one of 'auto','on','off' : "+ str(mode))
