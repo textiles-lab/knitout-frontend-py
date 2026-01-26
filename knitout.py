@@ -195,6 +195,14 @@ class Writer:
     def subRollerNumber(self, val):
         self.operations.append('x-sub-roller-number ' + str(val))
 
+    def startLoop(self, val):
+        '''start jump economizer loop: use 11-19 for inner and 21-29 for outer'''
+        self.operations.append('x-loop-start ' + str(val))
+
+    def endLoop(self, val):
+        '''end jump economizer loop: use 11-19 for inner and 21-29 for outer'''
+        self.operations.append('x-loop-end ' + str(val))
+    
     def fabricPresser(self, mode):
         if not (mode == 'auto' or mode == 'on' or mode == 'off'):
             raise ValueError("Mode must be one of 'auto','on','off' : "+ str(mode))
